@@ -556,6 +556,9 @@ def accessibility(
     help="Save output JSON to this file",
 )
 @click.option(
+    "--wait", type=int, help="Wait this many milliseconds before taking the screenshot"
+)
+@click.option(
     "-r",
     "--raw",
     is_flag=True,
@@ -573,6 +576,7 @@ def javascript(
     input,
     auth,
     output,
+    wait,
     raw,
     browser,
     user_agent,
@@ -624,6 +628,8 @@ def javascript(
             page.on("console", console_log)
         response = page.goto(url)
         skip_or_fail(response, skip, fail)
+        if wait:
+            time.sleep(wait / 1000)
         result = _evaluate_js(page, javascript)
         browser_obj.close()
     if raw:
